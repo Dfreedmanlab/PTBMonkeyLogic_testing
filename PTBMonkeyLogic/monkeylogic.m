@@ -1358,6 +1358,7 @@ else
     set(findobj('tag', 'mlmessagebox'), 'string', 'Done.');
 end
 
+set(findobj('tag', 'runbutton'), 'enable', 'on');		%Enable the run button in the monkeylogic's main menu
 varargout = {RESULT};
 
 

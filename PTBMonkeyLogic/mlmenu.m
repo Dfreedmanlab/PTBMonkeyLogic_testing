@@ -2292,6 +2292,7 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                 return
 			end
             
+			set(findobj(gcf, 'tag', 'runbutton'), 'enable', 'off');			%this is a fail-safe in the case that a user hits the run button twice
             set(gcbo, 'hittest', 'off');
             nullstr = get(findobj(gcf, 'tag', 'totalconds'), 'string');
             if ~strcmp(nullstr, '--'),
@@ -2303,9 +2304,11 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                     a = questdlg('Overwrite existing data file?', 'Data file already exists');
                     if strcmpi(a, 'No'),
                         mlmessage('Enter a new data file name to run the task');
+						set(findobj(gcf, 'tag', 'runbutton'), 'enable', 'on');			%this is a fail-safe in the case that a user hits the run button twice
                         return
                     elseif strcmpi(a, 'Cancel'),
                         mlmessage('');
+						set(findobj(gcf, 'tag', 'runbutton'), 'enable', 'on');			%this is a fail-safe in the case that a user hits the run button twice
                         return
                     end
                 end
