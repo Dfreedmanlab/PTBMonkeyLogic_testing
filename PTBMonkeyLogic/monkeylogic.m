@@ -2045,6 +2045,7 @@ close_daq(DaqInfo);
 fclose(fidbhv);
 trackvarchanges(-2);						%clears VarChanges, which is a record of changes to editable variables.
 ax = findobj('tag', 'replica');
+set(findobj('tag', 'runbutton'), 'enable', 'on');	%Enables the run button in the main menu
 if ~isempty(ax),
     axes(ax);
     cla;
