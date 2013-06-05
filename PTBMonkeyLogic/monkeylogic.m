@@ -59,7 +59,11 @@ lasterror = 0;
 lastblock = [];
 lastcond = [];
 %%% initialize the random number generator
-RandStream.setDefaultStream(RandStream('mt19937ar', 'seed', sum(100*clock)));
+if str2double(version(1)) > 7
+    RandStream.setGlobalStream(RandStream('mt19937ar', 'seed', sum(100*clock)));
+else
+    RandStream.setDefaultStream(RandStream('mt19937ar', 'seed', sum(100*clock))); %#ok<SETRS>
+end
 condfile = varargin{1};
 
 % Load configuration info:
@@ -1441,7 +1445,11 @@ end
 if ~preprocessed,
     file = name;
     if ischar(file), %file name
-        reader = mmreader(file);
+		if str2double(version(1)) > 7
+			reader = VideoReader(file);
+		else
+			reader = mmreader(file);
+		end
         numframes = get(reader, 'numberOfFrames');
         mov = read(reader);
     else %movie data already present, as if created using a "gen" function

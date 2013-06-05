@@ -687,7 +687,7 @@ if fxn1 == -1,
 	
 	% Set flip thresholds based on time taken for vertical retrace
     ttotal = 1000/ScreenData.RefreshRate;
-    thresh = ttotal * 0.90;
+    thresh = ttotal * 0.83;
 	
     return
 elseif fxn1 == -2, %call from showcursor

@@ -593,7 +593,11 @@ else
     nummovs = length(movnames);
     movsizes = cell(nummovs, 1);
     for movnum = 1:nummovs,
-        reader = mmreader(movfiles{movnum}); %#ok<TNMLP>
+		if str2double(version(1)) > 7
+			reader = VideoReader(movfiles{movnum}); %#ok<TNMLP>
+		else
+			reader = mmreader(movfiles{movnum}); %#ok<TNMLP>
+		end
         numframes = get(reader, 'numberOfFrames');
         M = squeeze(read(reader,1));
         movs{movnum} = M;

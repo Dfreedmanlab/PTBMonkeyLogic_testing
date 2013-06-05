@@ -2283,11 +2283,11 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                         
         case 'runbutton',
             
-            if get(findobj(gcf, 'tag', 'blocklogic'), 'value') == 5 && isempty(get(findobj(gcf, 'tag', 'blockselectfun'), 'userdata')),
+			if get(findobj(gcf, 'tag', 'blocklogic'), 'value') == 5 && isempty(get(findobj(gcf, 'tag', 'blockselectfun'), 'userdata')),
                mlmessage('Must specify a block-selection function for user-controlled block transitions');
                return
-            end
-            if get(findobj(gcf, 'tag', 'condlogic'), 'value') == 5 && isempty(get(findobj(gcf, 'tag', 'condselectfun'), 'userdata')),
+			end
+			if get(findobj(gcf, 'tag', 'condlogic'), 'value') == 5 && isempty(get(findobj(gcf, 'tag', 'condselectfun'), 'userdata')),
                 mlmessage('Must specify a condition-selection function for user-controlled conditions');
                 return
 			end
@@ -2489,7 +2489,11 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
 
             elseif strcmpi(t, 'mov'), %movie
                 
-                reader = mmreader(ob.Name);
+				if str2double(version(1)) > 7
+					reader = VideoReader(ob.Name);
+				else
+					reader = mmreader(ob.Name);
+				end
                 numframes = get(reader, 'numberOfFrames');
                 
                 imdata = squeeze(read(reader, 1));
@@ -2675,13 +2679,17 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                         
                         j=1;
                         processedfile = [pname filesep fname sprintf('_preprocessed%i.mat',j)];
-                        while exist(processedfile, 'file'),
+						while exist(processedfile, 'file'),
                             delete(processedfile);
                             j = j + 1;
                             processedfile = [pname filesep fname sprintf('_preprocessed%i.mat',j)];
-                        end
+						end
                         
-                        reader = mmreader(sourcefile); %#ok<TNMLP>
+						if str2double(version(1)) > 7
+							reader = VideoReader(sourcefile); %#ok<TNMLP>
+						else
+							reader = mmreader(sourcefile); %#ok<TNMLP>
+						end
                         numframes = get(reader, 'numberOfFrames');
                         bpp       = get(reader, 'bitsPerPixel');
                         height    = get(reader, 'height');
@@ -3288,7 +3296,11 @@ if strcmpi(TOB.Type, 'fix') || strcmpi(TOB.Type, 'pic') || strcmpi(TOB.Type, 'cr
         imdata = imread('genimgsample.jpg');
         imdata = double(imdata)/255;
     elseif strcmpi(TOB.Type, 'mov'),
-        reader = mmreader(TOB.Name);
+		if str2double(version(1)) > 7
+			reader = VideoReader(TOB.Name);
+		else
+			reader = mmreader(TOB.Name);
+		end
         numframes = get(reader, 'numberOfFrames');
         imdata = squeeze(read(reader, 1));
     elseif strcmpi(TOB.Type, 'crc'),

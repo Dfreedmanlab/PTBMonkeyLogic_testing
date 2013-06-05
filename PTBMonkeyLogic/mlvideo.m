@@ -16,8 +16,7 @@ function result = mlvideo(fxn, varargin)
 %mlvideo('showcursor', screenid)
 %mlvideo('flush')
 %
-%Function OnScreenWin is a sub-function that is defined at the end of this
-%m file. It is used to find an onscreen window on the specified device.
+%
 %Created by RK April, 2013
 
 result = [];
@@ -30,9 +29,8 @@ switch fxn
 	%not running OpenGL. Also set verbosity to 2, which sets Screen
 	%Preferences so that only severe error messages are displayed. Also
 	%closes all onscreen and offscreen windows if any are open.
-		AssertOpenGL;
+        AssertOpenGL;
 		Screen('Preference', 'Verbosity', 2);
-		Screen('Preference', 'SkipSyncTests', 0);
 		
 		if ~isempty(Screen('Windows'))
 			Screen('CloseAll');
@@ -95,11 +93,11 @@ switch fxn
 		Screen('DrawTexture', deviceptr, texptr, sourceRect, destinationRect);
 		
 	case 'flip'
-	%flips the backbuffer to the screen. I am setting it up so that it doesn't
-	%sync with the vertical blank; it flips immediately.
+	%flips the backbuffer to the screen. I am setting it up so that it does
+	%sync with the vertical blank, but it doesn't pause code from running.
 		deviceptr = varargin{1};
 		
-		Screen('Flip', deviceptr, [], 2, 1);
+		Screen('Flip', deviceptr, 0, 1, 1);
 		
 	case 'setbg'
 	%sets the background color for the backbuffer. Replaces 'clear'.
