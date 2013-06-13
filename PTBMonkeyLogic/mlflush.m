@@ -3,7 +3,11 @@
 
 mlvideo('flush');
 daqreset;
-clear sound;
+if verLessThan('matlab', '8')
+    sound clear;
+else
+    clear sound;
+end
 clear all;
 fclose all;
 close all;

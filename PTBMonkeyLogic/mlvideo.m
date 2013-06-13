@@ -97,7 +97,7 @@ switch fxn
 	%sync with the vertical blank, but it doesn't pause code from running.
 		deviceptr = varargin{1};
 		
-		Screen('Flip', deviceptr, 0, 1, 1);
+		Screen('Flip', deviceptr, 0, 2, 1);
 		
 	case 'setbg'
 	%sets the background color for the backbuffer. Replaces 'clear'.

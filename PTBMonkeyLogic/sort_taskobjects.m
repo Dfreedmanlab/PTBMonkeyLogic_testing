@@ -108,10 +108,10 @@ for i = 1:length(UniqueTaskObjects),
 %             numframes = length(mov);
 %             txt = sprintf('Mov: %s [%i x %i] %i Frames', obname, xs, ys, numframes);
             
-			if str2double(version(1)) > 7
-				reader = VideoReader(UOB.Name); %#ok<TNMLP>
+			if verLessThan('matlab', '8')
+                reader = mmreader(UOB.Name); %#ok<DMMR,TNMLP>
 			else
-				reader = mmreader(UOB.Name); %#ok<TNMLP>
+				reader = VideoReader(UOB.Name); %#ok<TNMLP>
 			end
             txt = sprintf('Mov: %s [%i x %i] %i Frames', obname, get(reader, 'width'), get(reader, 'height'), get(reader, 'numberOfFrames'));
         case 'snd',

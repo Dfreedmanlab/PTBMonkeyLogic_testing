@@ -595,7 +595,7 @@ persistent TrialObject DAQ AI ScreenData eTform jTform ControlObject totalsample
     joyx joyy eyex eyey joypresent eyepresent eyetarget_index eyetarget_record ...
     buttonspresent analogbuttons buttonnumber buttonx buttonsdio ...
     lastframe benchmark benchdata benchcount benchdata2 benchcount2 benchmax ....
-	ttotal thresh
+	ttotal thresh toggled
 
 t1 = trialtime;
 ontarget = 0;
@@ -687,7 +687,7 @@ if fxn1 == -1,
 	
 	% Set flip thresholds based on time taken for vertical retrace
     ttotal = 1000/ScreenData.RefreshRate;
-    thresh = ttotal * 0.83;
+	thresh = ttotal * 0.82;
 	
     return
 elseif fxn1 == -2, %call from showcursor
@@ -1154,15 +1154,22 @@ while t2 < maxtime,
         % to draw (if rasterline > threshold value)
         rastertime = (mlvideo('rasterline', ScreenData.dptr)/ScreenData.Ysize) * ttotal;
 		
-        if videoupdates && rastertime > thresh
-            if yesshowcursor,
-                cxpos = floor(ScreenData.Half_xs + (ScreenData.PixelsPerDegree*xp_joy) - (ScreenData.CursorXsize/2));
-                cypos = floor(ScreenData.Half_ys - (ScreenData.PixelsPerDegree*yp_joy) - (ScreenData.CursorYsize/2));
-                [tflip lastframe] = toggleobject(-4, [cxpos cypos]);
-            else
-                [tflip lastframe] = toggleobject(-4);
-            end
-            drawnowok = 1; %can only update the control screen if just completed a video update (should still have enough time before the next flip)
+        if videoupdates
+			if rastertime > thresh
+				if isempty(toggled) || ~toggled
+					if yesshowcursor,
+						cxpos = floor(ScreenData.Half_xs + (ScreenData.PixelsPerDegree*xp_joy) - (ScreenData.CursorXsize/2));
+						cypos = floor(ScreenData.Half_ys - (ScreenData.PixelsPerDegree*yp_joy) - (ScreenData.CursorYsize/2));
+						[tflip lastframe] = toggleobject(-4, [cxpos cypos]);
+					else
+						[tflip lastframe] = toggleobject(-4);
+					end
+					drawnowok = 1; %can only update the control screen if just completed a video update (should still have enough time before the next flip)
+					toggled = 1;	%video has been updated
+				end
+			else
+				toggled = 0;
+			end
         end
         dt = (t - t1) - t2;
         this_cyclerate = round(1000/dt);

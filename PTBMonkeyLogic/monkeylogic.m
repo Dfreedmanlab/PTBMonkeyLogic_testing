@@ -59,10 +59,10 @@ lasterror = 0;
 lastblock = [];
 lastcond = [];
 %%% initialize the random number generator
-if str2double(version(1)) > 7
-    RandStream.setGlobalStream(RandStream('mt19937ar', 'seed', sum(100*clock)));
-else
+if verLessThan('matlab', '8')
     RandStream.setDefaultStream(RandStream('mt19937ar', 'seed', sum(100*clock))); %#ok<SETRS>
+else
+    RandStream.setGlobalStream(RandStream('mt19937ar', 'seed', sum(100*clock)));
 end
 condfile = varargin{1};
 
@@ -1445,10 +1445,10 @@ end
 if ~preprocessed,
     file = name;
     if ischar(file), %file name
-		if str2double(version(1)) > 7
-			reader = VideoReader(file);
+		if verLessThan('matlab', '8')
+            reader = mmreader(file); %#ok<DMMR>
 		else
-			reader = mmreader(file);
+			reader = VideoReader(file);
 		end
         numframes = get(reader, 'numberOfFrames');
         mov = read(reader);

@@ -2489,10 +2489,10 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
 
             elseif strcmpi(t, 'mov'), %movie
                 
-				if str2double(version(1)) > 7
-					reader = VideoReader(ob.Name);
+				if verLessThan('matlab', '8')
+                    reader = mmreader(ob.Name); %#ok<DMMR>
 				else
-					reader = mmreader(ob.Name);
+					reader = VideoReader(ob.Name);
 				end
                 numframes = get(reader, 'numberOfFrames');
                 
@@ -2685,10 +2685,10 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                             processedfile = [pname filesep fname sprintf('_preprocessed%i.mat',j)];
 						end
                         
-						if str2double(version(1)) > 7
-							reader = VideoReader(sourcefile); %#ok<TNMLP>
+						if verLessThan('matlab', '8')
+                            reader = mmreader(sourcefile); %#ok<DMMR,TNMLP>
 						else
-							reader = mmreader(sourcefile); %#ok<TNMLP>
+							reader = VideoReader(sourcefile); %#ok<TNMLP>
 						end
                         numframes = get(reader, 'numberOfFrames');
                         bpp       = get(reader, 'bitsPerPixel');
@@ -3296,10 +3296,10 @@ if strcmpi(TOB.Type, 'fix') || strcmpi(TOB.Type, 'pic') || strcmpi(TOB.Type, 'cr
         imdata = imread('genimgsample.jpg');
         imdata = double(imdata)/255;
     elseif strcmpi(TOB.Type, 'mov'),
-		if str2double(version(1)) > 7
-			reader = VideoReader(TOB.Name);
+		if verLessThan('matlab', '8')
+            reader = mmreader(TOB.Name); %#ok<DMMR>
 		else
-			reader = mmreader(TOB.Name);
+			reader = VideoReader(TOB.Name);
 		end
         numframes = get(reader, 'numberOfFrames');
         imdata = squeeze(read(reader, 1));
