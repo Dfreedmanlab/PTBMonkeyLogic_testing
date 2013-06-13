@@ -179,7 +179,10 @@ elseif stimuli == -2, %trial exit data
     return
 elseif stimuli == -3, %call from reposition_object or set_object_path
     stimnum = varargin{1};
-    TrialObject(stimnum) = varargin{2};
+    TrialObject(stimnum).XPos = varargin{2}.XPos;
+	TrialObject(stimnum).YPos = varargin{2}.YPos;
+	TrialObject(stimnum).XsPos = varargin{2}.XsPos;
+	TrialObject(stimnum).YsPos = varargin{2}.YsPos;
     statrec = double(cat(1, TrialObject.Status));
     if varargin{3}, %called from reposition_object, not set_object_path
         togglecount = togglecount + 1;
@@ -188,7 +191,7 @@ elseif stimuli == -3, %call from reposition_object or set_object_path
         ObjectStatusRecord(togglecount).Status = statrec;
         ObjectStatusRecord(togglecount).Data{1} = [TrialObject(stimnum).XPos TrialObject(stimnum).YPos];
         if TrialObject(stimnum).Status,
-            toggleobject([stimnum stimnum], 'fast');
+            toggleobject([stimnum stimnum], 'drawmode', 'fast');
         end
     end
     return
@@ -1811,17 +1814,17 @@ if ~isempty(TrialObject(stimnum).XPos),
     TO.XsPos = hxs + round(ScreenData.PixelsPerDegree * xnew) - xoffset;
     TO.YsPos = hys - round(ScreenData.PixelsPerDegree * ynew) - yoffset; %invert so that positive y is above the horizon
 
-    if TO.XsPos + TO.Xsize > ScreenData.Xsize || TO.YsPos + TO.Ysize > ScreenData.Ysize || TO.XsPos < 1 || TO.YsPos < 1,
+    if TO.XsPos + TO.Xsize > ScreenData.Xsize || TO.YsPos + TO.Ysize > ScreenData.Ysize || TO.XsPos < 0 || TO.YsPos < 0,
         TO.XPos = xpos_bak;
         TO.YPos = ypos_bak;
         TO.XsPos = xspos_bak;
         TO.YsPos = yspos_bak;
         repos_success = 0;
         user_warning('Attempt reposition object #%i failed. Target outside screen boundary.', stimnum);
-    else
+	else
+		TrialObject(stimnum) = TO;
         toggleobject(-3, stimnum, TO, 1);
         eyejoytrack(-3, stimnum, TO);
-        TrialObject(stimnum) = TO;
         repos_success = 1;
     end
 
