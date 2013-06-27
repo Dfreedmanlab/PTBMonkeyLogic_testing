@@ -120,8 +120,12 @@ hotkey('space', 'simulation_positions(2,5,-Inf);');
 hotkey('backspace', 'simulation_positions(2,5,Inf);');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Info = TrialRecord.CurrentConditionInfo;       %#ok<NASGU>
-StimulusInfo = TrialRecord.CurrentConditionStimulusInfo; %#ok<NASGU>
+if isfield(TrialRecord, 'CurrentConditionInfo')
+	Info = TrialRecord.CurrentConditionInfo;       %#ok<NASGU>
+end
+if isfield(TrialRecord, 'CurrentConditionStimulusInfo')
+	StimulusInfo = TrialRecord.CurrentConditionStimulusInfo; %#ok<NASGU>
+end
 user_text('');
 
 try
@@ -356,7 +360,7 @@ for i = stimuli_fortoggle,
 				ob.CurrFrame = ob.InitFrame;
             else %advance frame(s) and / or position(s)
 				if currentframe - lastframe > 1,
-                    eventmarker(200);
+                    eventmarker(13);
                     disp(sprintf('Warning: skipped %i frame(s) of %s at %3.1f ms\n', (currentframe - lastframe - 1), ob.Name, trialtime));
                     user_warning('Skipped %i frame(s) of %s at %3.1f ms', (currentframe - lastframe - 1), ob.Name, trialtime);
 				end

@@ -66,3 +66,6 @@ elseif strcmpi(ext, '.jpg') || strcmpi(ext, '.jpeg') || strcmpi(ext, '.bmp') || 
 
     save(processedfile, 'imdata', 'xis', 'yis', 'cocolor');
 end
+
+function mean_val = nanmean(v)
+mean_val = mean(v(~isnan(v)));

@@ -1362,8 +1362,9 @@ else
     set(findobj('tag', 'mlmessagebox'), 'string', 'Done.');
 end
 
-set(findobj('tag', 'runbutton'), 'enable', 'on');		%Enable the run button in the monkeylogic's main menu
 varargout = {RESULT};
+set(findobj('tag', 'runbutton'), 'enable', 'on');		%Enable the run button in monkeylogic's main menu
+
 
 
 
@@ -1697,7 +1698,7 @@ for obnum = 1:lc, %first check for user-generated images
             end
             
             if C(obnum).Xsize ~= -1 && C(obnum).Ysize ~= -1,
-                imdata = imresize(imdata, [C(obnum).Ysize C(obnum).Xsize]);
+                %imdata = imresize(imdata, [C(obnum).Ysize C(obnum).Xsize]);
                 if any(any(any(imdata < 0))),
                     imdata(imdata < 0) = 0;
                 end
