@@ -114,6 +114,16 @@ addpath(pp);
 %Attempt to save the new path. If the attempt fails, display an error.
 attempt_save();													%defined at next bookmark
 
+%Set directories in MonkeyLogic's preferences
+dirs.BaseDirectory = [];
+while ~strcmpi(dirs.BaseDirectory, [pwd filesep])
+	fprintf('Please select your experiment directory. If you do not have one yet, just select any directory.\n')
+	fprintf('DO NOT hit cancel. If you do, you will be prompted to do this again.\n\n')
+	set_ml_directories;
+	clear dirs
+	dirs = getpref('MonkeyLogic', 'Directories');
+end
+
 %--------------------------------------------------------------------------
 %Check for existence of psychtoolbox. If it does not exist, ask if we
 %should go ahead and download it.
