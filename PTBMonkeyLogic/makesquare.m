@@ -63,3 +63,5 @@ sqr(:, :, 1) = sqr(:, :, 1).*(rgb(1) - bgcolor(1)) + bgcolor(1);
 sqr(:, :, 2) = sqr(:, :, 2).*(rgb(2) - bgcolor(2)) + bgcolor(2);
 sqr(:, :, 3) = sqr(:, :, 3).*(rgb(3) - bgcolor(3)) + bgcolor(3);
 
+sqr = sqr .* 255;
+

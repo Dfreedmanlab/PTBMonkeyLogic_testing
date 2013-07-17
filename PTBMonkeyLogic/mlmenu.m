@@ -2409,7 +2409,7 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
             vbufnum = 0;
             if strcmpi(t, 'fix') || strcmpi(t, 'pic') || strcmpi(t, 'dot') || strcmpi(t, 'crc') || strcmpi(t, 'sqr') || strcmpi(t, 'gen'),
 
-                if strcmp(t, 'fix') || strcmp(t, 'dot'),
+				if strcmp(t, 'fix') || strcmp(t, 'dot'),
                     imdata = get_fixspot(bgcolor);
                 elseif strcmp(t, 'pic'),
                     imdata = double(imread(ob.Name));
@@ -2438,8 +2438,7 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                     if (max(max(max(imdata)))) > 1,
                       imdata = imdata/255;
                     end
-                end
-
+				end
                 [yis xis ~] = size(imdata);
                 xoffset = round(xis/2);
                 yoffset = round(yis/2);
@@ -3262,7 +3261,7 @@ if strcmpi(TOB.Type, 'fix') || strcmpi(TOB.Type, 'pic') || strcmpi(TOB.Type, 'cr
             fixspot = 'DEFAULT';
         end
         if strcmpi(fixspot, 'DEFAULT'),
-            imdata = makecircle(4.5, [1 1 1], 1, bgcolor);
+            imdata = makecircle(4.5, [1 1 1], 1, bgcolor) ./ 255;	%image function only takes values between 0 and 1
             fixdescription = 'Fix: Default';
         else
             imdata = imread(fixspot);
@@ -3305,11 +3304,11 @@ if strcmpi(TOB.Type, 'fix') || strcmpi(TOB.Type, 'pic') || strcmpi(TOB.Type, 'cr
         imdata = squeeze(read(reader, 1));
     elseif strcmpi(TOB.Type, 'crc'),
         crcrad = TOB.Radius * ppd;
-        imdata = makecircle(crcrad, TOB.Color, TOB.FillFlag, bgcolor);
+        imdata = makecircle(crcrad, TOB.Color, TOB.FillFlag, bgcolor) ./ 255; %Need to get it into the 0-1 range
     elseif strcmpi(TOB.Type, 'sqr'),
         sqrx = TOB.Xsize * ppd;
         sqry = TOB.Ysize * ppd;
-        imdata = makesquare([sqrx sqry], TOB.Color, TOB.FillFlag, bgcolor);
+        imdata = makesquare([sqrx sqry], TOB.Color, TOB.FillFlag, bgcolor) ./ 255;	%makesquare generates matrices with entries in the 0 - 255 range
     end
     image(imdata, 'parent', stimax);
     axis square;

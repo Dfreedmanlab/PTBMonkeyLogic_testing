@@ -39,3 +39,5 @@ else
     crc(:, :, 2) = crc(:, :, 2).*(rgb(2) - bgcolor(2)) + bgcolor(2);
     crc(:, :, 3) = crc(:, :, 3).*(rgb(3) - bgcolor(3)) + bgcolor(3);
 end
+
+crc = crc .* 255;
