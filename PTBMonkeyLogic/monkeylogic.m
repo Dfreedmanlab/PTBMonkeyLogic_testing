@@ -605,10 +605,6 @@ end
 for trial = 1:MLConfig.MaxTrials,
     
     TrialRecord.CurrentTrialNumber = trial;
-    TrialRecord.CurrentCondition = [];
-    TrialRecord.CurrentBlock = [];
-    TrialRecord.CurrentBlockCount = [];
-    TrialRecord.ConditionsThisBlock = [];
     
     if ~userdefinedtaskloop,
         %% Select Block
@@ -1824,6 +1820,9 @@ for obnum = 1:lc, %first check for user-generated images
             TaskObject(obnum).Ysize = yis; %the y-size of the image, in pixels
             TaskObject(obnum).Status = 0; %the status of the movie (0 = off, any positive integer reflects the current frame number)
             TaskObject(obnum).Name = C(obnum).Name;
+			if isempty(TaskObject(obnum).Name)
+				TaskObject(obnum).Name = 'mov';
+			end
         else
             TaskObject(obnum) = preloaded(obnum);
 %             TaskObject(obnum).Class = preloaded(obnum).Class;

@@ -122,9 +122,13 @@ hotkey('backspace', 'simulation_positions(2,5,Inf);');
 
 if isfield(TrialRecord, 'CurrentConditionInfo')
 	Info = TrialRecord.CurrentConditionInfo;       %#ok<NASGU>
+else
+	Info = []; %#ok<NASGU>
 end
 if isfield(TrialRecord, 'CurrentConditionStimulusInfo')
 	StimulusInfo = TrialRecord.CurrentConditionStimulusInfo; %#ok<NASGU>
+else
+	StimulusInfo = []; %#ok<NASGU>
 end
 user_text('');
 
@@ -259,33 +263,51 @@ if ~isempty(varargin) && ~movie_advance_only,
             if ischar(a) || iscell(a),
                 error('Value for <Toggleobject: MovieStartFrame> must be numeric');
             end
-            if length(a) == 1 || length(a) == length(stimuli),
-                [TrialObject(stimuli).StartFrame] = deal(a);
+            if length(a) == 1
+				for i = stimuli
+					TrialObject(i).StartFrame = a;
+				end
+			elseif length(a) == length(stimuli)
+				for i = length(stimuli)
+					TrialObject(stimuli(i)).StartFrame = a(i);
+				end
             else
                 error('Number of values for <ToggleObject: MovieStartFrame> must be equal to the number of specified stimuli, or scalar');
             end
             setstartframe = 1;
         elseif strcmpi(v, 'moviestep'),
-            if ischar(a) || iscell(a),
+			if ischar(a) || iscell(a),
                 error('Value for <Toggleobject: MovieStep> must be numeric');
-            end
-            if length(a) == 1 || length(a) == length(stimuli),
-                [TrialObject(stimuli).FrameStep] = deal(a);
-                if ~setstartframe && any(a < 0),
-                    stimsubset = stimuli(a < 0);
-                    for i = 1:length(stimsubset),
-                        TrialObject(stimsubset(i)).StartFrame = TrialObject(stimsubset(i)).NumFrames; %start playing backwards from last frame
-                    end
-                end
+			end
+			if length(a) == 1
+				for i = stimuli
+					TrialObject(i).FrameStep = a;
+				end
+			elseif length(a) == length(stimuli)
+				for i = length(stimuli)
+					TrialObject(stimuli(i)).FrameStep = a(i);
+				end
             else
                 error('Number of values for <ToggleObject: MovieStep> must be equal to the number of specified stimuli, or scalar');
-            end
+			end
+			if ~setstartframe && any(a < 0),
+				stimsubset = stimuli(a < 0);
+				for i = 1:length(stimsubset),
+					TrialObject(stimsubset(i)).StartFrame = TrialObject(stimsubset(i)).NumFrames; %start playing backwards from last frame
+				end
+			end
         elseif strcmpi(v, 'startposition'),
             if ischar(a) || iscell(a),
                 error('Value for <Toggleobject: StartPosition> must be numeric');
             end
-            if length(a) == 1 || length(a) == length(stimuli),
-                [TrialObject(stimuli).StartPosition] = deal(a);
+            if length(a) == 1
+				for i = stimuli
+					TrialObject(i).StartPosition = a;
+				end
+			elseif length(a) == length(stimuli)
+				for i = length(stimuli)
+					TrialObject(stimuli(i)).StartPosition = a(i);
+				end
             else
                 error('Number of values for <ToggleObject: StartPosition> must be equal to the number of specified stimuli, or scalar');
             end
@@ -295,7 +317,9 @@ if ~isempty(varargin) && ~movie_advance_only,
                 error('Value for <Toggleobject: PositionStep> must be numeric');
 			end
 			if length(a) == 1
-				[TrialObject(stimuli).PositionStep] = deal(a);
+				for i = 1 : stimuli
+					TrialObject(i).PositionStep = a;
+				end
 			elseif length(a) == length(stimuli)
 				for i = length(stimuli)
 					TrialObject(stimuli(i)).PositionStep = a(i);
