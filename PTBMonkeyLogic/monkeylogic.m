@@ -684,7 +684,7 @@ for trial = 1:MLConfig.MaxTrials,
                 trialcount = trialsthisblock;
             end
             %%%%%
-            if ((~repeatflag && trialcount == trialsperblock && ~userblockalreadychosen) || trial == 1) || (bswitchflag && ~userblockalreadychosen), %if block > 0, FirstBlock was set, so use that...
+            if ((~repeatflag && trialcount == trialsperblock && ~userblockalreadychosen) || trial == 1) || bswitchflag %if block > 0, FirstBlock was set, so use that...
                 switch MLConfig.BlockLogic,
                     case 1 % Random with replacement
                         if trial > 1 || (trial == 1 && block == 0),
