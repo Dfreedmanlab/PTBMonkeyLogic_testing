@@ -197,8 +197,8 @@ elseif stimuli == -3, %call from reposition_object or set_object_path
         ObjectStatusRecord(togglecount).Time = round(trialtime);
         ObjectStatusRecord(togglecount).Status = statrec;
         ObjectStatusRecord(togglecount).Data{1} = [TrialObject(stimnum).XPos TrialObject(stimnum).YPos];
-        if TrialObject(stimnum).Status,
-            toggleobject([stimnum stimnum], 'drawmode', 'fast');
+        if TrialObject(stimnum).Status
+            toggleobject(stimnum, 'Status', 'On', 'drawmode', 'fast');
         end
     end
     return
@@ -361,18 +361,20 @@ end
 
 videochange = 0;
 
-if stimuli == -4
+if any(stimuli == -4 | stimuli == 0)										%the bitwise or takes care of cases where stimuli is a vector
 	stimuli_fortoggle = find([TrialObject.Status] ~= 0);
+	stimuli_fortoggle = fliplr(stimuli_fortoggle);
 else
-	stimuli_fortoggle = union(stimuli, find([TrialObject.Status] ~= 0));
+	temp = find([TrialObject.Status] ~= 0);									%all objects with non-zero status
+	temp = setdiff(temp, stimuli);											%all objects with non-zero status excluding stimuli objects
+																			%this is in case the same stimulus is called multiple times
+	stimuli_fortoggle = sort([stimuli temp], 1, 'descend');
 end
-stimuli_fortoggle = fliplr(stimuli_fortoggle);
 
 for i = stimuli_fortoggle,
 	ob = TrialObject(i);
     if ob.Status,
         if ob.Modality == 1, %static video object
-			assignin('base', 'ob', ob);
             mlvideo('drawtex', ScreenData.dptr, ob.Buffer, ob.XsPos, ob.YsPos, ob.Xsize, ob.Ysize);
             videochange = 1;
         elseif ob.Modality == 2, %movie
@@ -385,17 +387,20 @@ for i = stimuli_fortoggle,
             else %advance frame(s) and / or position(s)
 				if currentframe - lastframe > 1,
                     eventmarker(13);
-                    disp(sprintf('Warning: skipped %i frame(s) of %s at %3.1f ms\n', (currentframe - lastframe - 1), ob.Name, trialtime));
+                    fprintf('Warning: skipped %i frame(s) of %s at %3.1f ms\n', (currentframe - lastframe - 1), ob.Name, trialtime);
                     user_warning('Skipped %i frame(s) of %s at %3.1f ms', (currentframe - lastframe - 1), ob.Name, trialtime);
 				end
 				
-				if ~activemovies(i)			%This is for when an object is toggled back on after being toggled off in one trial
+				if ~activemovies(i)			%this is for when an object is toggled back on after being toggled off in one trial
 					activemovies(i) = 1;
 				end
 				
-                indx = round(ob.FrameStep*(currentframe - ob.InitFrame)) + ob.StartFrame;
+                indx = round(ob.FrameStep*(currentframe - ob.InitFrame)) + ob.StartFrame;	%the +1 should take care of the first frame being repeated issue
                 modulus = max(length(ob.FrameOrder),ob.NumFrames);
-                indx = mod(indx, modulus) + 1;
+                indx = mod(indx, modulus);
+				if indx == 0
+					indx = 1;
+				end
                 
 				if ~isempty(ob.FrameEvents),
                     f_list = ob.FrameEvents(1,:);
@@ -407,17 +412,16 @@ for i = stimuli_fortoggle,
 				end
                 
 				if indx > length(ob.FrameOrder),
-                    ob.Status = indx;
+                    ob.Status = indx - 1;									%the -1 negates the +1 that comes a few lines later
+																			%that +1 is required to take care of set_object_path
                 else
                     ob.Status = ob.FrameOrder(indx);
 				end
-				
 				
 				ob.Status = mod(ob.Status, ob.NumFrames) + 1;
 				ob.CurrFrame = ob.CurrFrame + (currentframe - lastframe) * ob.PositionStep;
 				indx = round(ob.CurrFrame - ob.InitFrame) + ob.StartPosition;
 				ob.CurrentPosition = mod(indx, ob.NumPositions) + 1;
-				
             end
             mlvideo('drawtex', ScreenData.dptr, ob.Buffer(ob.Status), ob.XsPos(ob.CurrentPosition), ob.YsPos(ob.CurrentPosition), ob.Xsize, ob.Ysize);
             TrialObject(i) = ob; %update persistent TrialObject array
