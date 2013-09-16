@@ -768,12 +768,12 @@ for i = numobjects:-1:1,
     ob = tob{i};
     if ~isempty(ob),
         [imdata xpos ypos] = make_object(ob, bhv);
-        if iscell(imdata),
+		if iscell(imdata),
             M = imdata;
             imdata = M{1};
         else
             M = [];
-        end
+		end
         h(i) = image(imdata/255);
         ysize = size(imdata, 1);
         xsize = size(imdata, 2);
@@ -953,7 +953,7 @@ elseif strcmp(obtype, 'crc'),
     fillflag = str2double(att{3});
     xpos = str2double(att{4});
     ypos = str2double(att{5});
-    imdata = ceil(255*makecircle(diameter, rgb, fillflag));
+    imdata = ceil(makecircle(diameter, rgb, fillflag));
 
 elseif strcmp(obtype, 'sqr'),
     diameter = bhv.PixelsPerDegree*str2double(att{1});
@@ -961,7 +961,7 @@ elseif strcmp(obtype, 'sqr'),
     fillflag = str2double(att{3});
     xpos = str2double(att{4});
     ypos = str2double(att{5});
-    imdata = ceil(255*makesquare(diameter, rgb, fillflag));
+    imdata = ceil(makesquare(diameter, rgb, fillflag));
 
 elseif strcmp(obtype, 'fix'),
     diameter = 5;
@@ -969,7 +969,7 @@ elseif strcmp(obtype, 'fix'),
     fillflag = 1;
     xpos = str2double(att{1});
     ypos = str2double(att{2});
-    imdata = ceil(255*makecircle(diameter, rgb, fillflag));
+    imdata = ceil(makecircle(diameter, rgb, fillflag));
 
 elseif strcmp(obtype, 'snd'),
     imdata = imread('soundicon.jpg');
