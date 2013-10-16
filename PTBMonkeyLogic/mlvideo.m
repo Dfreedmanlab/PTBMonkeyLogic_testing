@@ -51,7 +51,11 @@ switch fxn
 		bufferpages = varargin{2};
 		black = BlackIndex(devicenum);
 		
-		result = Screen('OpenWindow', devicenum, black, [], [], bufferpages);
+		PsychImaging('PrepareConfiguration');
+		PsychImaging('AddTask', 'General', 'UseVirtuaFramebuffer');
+		result = PsychImaging('OpenWindow', devicenum, black);
+		
+		%result = Screen('OpenWindow', devicenum, black, [], [], bufferpages);
 		
 		for i = 1 : bufferpages
 			Screen('Flip', result, 0, 2);
@@ -97,7 +101,9 @@ switch fxn
 	%sync with the vertical blank, but it doesn't pause code from running.
 		deviceptr = varargin{1};
 		
-		Screen('Flip', deviceptr, 0, 2, 1);
+		Screen('AsyncFlipBegin', deviceptr, 0, 2);
+		Screen('AsyncFlipEnd', deviceptr);
+		%Screen('Flip', deviceptr, 0, 2, 1);
 		
 	case 'setbg'
 	%sets the background color for the backbuffer. Replaces 'clear'.
