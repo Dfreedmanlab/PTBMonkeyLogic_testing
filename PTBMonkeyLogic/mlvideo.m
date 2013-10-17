@@ -52,7 +52,7 @@ switch fxn
 		black = BlackIndex(devicenum);
 		
 		PsychImaging('PrepareConfiguration');
-		PsychImaging('AddTask', 'General', 'UseVirtuaFramebuffer');
+		PsychImaging('AddTask', 'General', 'UseVirtualFramebuffer');
 		result = PsychImaging('OpenWindow', devicenum, black);
 		
 		%result = Screen('OpenWindow', devicenum, black, [], [], bufferpages);
@@ -101,7 +101,7 @@ switch fxn
 	%sync with the vertical blank, but it doesn't pause code from running.
 		deviceptr = varargin{1};
 		
-		Screen('AsyncFlipBegin', deviceptr, 0, 2);
+		Screen('AsyncFlipBegin', deviceptr, 0, 2, 1);
 		Screen('AsyncFlipEnd', deviceptr);
 		%Screen('Flip', deviceptr, 0, 2, 1);
 		
